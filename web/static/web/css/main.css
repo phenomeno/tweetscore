@@ -1,0 +1,23 @@
+.card {
+  margin-right: 0;
+  margin-left: 0;
+  background-color: #fff;
+  border-left: 1px solid #e1e8ed;
+  border-right: 1px solid #e1e8ed;
+  border-bottom: 1px solid #e1e8ed;
+  border-radius: 4px 4px 0 0;
+  box-shadow: none;
+  padding: 15px 15px 15px;
+  position: relative;
+}
+
+.card-header {
+  margin-right: 0;
+  margin-left: 0;
+  background-color: #fff;
+  border: 1px solid #e1e8ed;
+  border-radius: 4px 4px 0 0;
+  box-shadow: none;
+  padding: 15px 15px 15px;
+  position: relative;
+}
