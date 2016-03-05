@@ -1,2 +1,3 @@
 steps.mkd
 db.sqlite3
+*.pyc
