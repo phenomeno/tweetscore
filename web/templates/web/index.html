@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../../static/web/css/main.css">
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../static/web/js/angular.min.js"></script>
   </head>
   <body>
     <div class="container-fluid">
@@ -22,50 +23,8 @@
             </span>
           </div>
           <div style="height:15px;"></div>
-          {% if data %}
-          <div class="row">
-            <div class="col-xs-3" id="profile" style="margin-top:15px;">
-              <img src="{{ data.photo_link }}" style="width:100%" />
-              <h3>{{ data.name }}</h3>
-              <small>@{{ data.handle }}</small>
-              <p>{{ data.description }}</p>
-              <p>{{ data.location }}</p>
-              <a>{{ data.external_link }}</a>
-              <p>{{ data.join_date}}</p>
-            </div> <!--End of profile-->
-            <div class="col-xs-9" id="tweets">
-              <div id="tweetscore" style="margin-left:2px;">
-                <h3>Score: {{ data.tweetscore }}</h3><small> Based on</small>
-                <div class="row">
-                  <div class="col-xs-4">Number of followers: {{ data.follower_count }}</div>
-                  <div class="col-xs-4">Content of tweets: {{ data.tweet_content }}</div>
-                  <div class="col-xs-4">Followers scores: {{ data.followers_score }}</div>
-                </div>
-              </div> <!-- End of tweetscore section-->
-              <div style="height:15px;"></div>
-              <div class="card-header">
-                <strong>Filters</strong>
-                <div class="row">
-                  <div class="col-xs-4">Number of re-tweets</div>
-                  <div class="col-xs-4">Dates</div>
-                  <div class="col-xs-4">Photo?</div>
-                </div>
-              </div> <!-- end of card header -->
-              {% for tweet in data.tweets %}
-              <div class="card">
-                <div class="row">
-                  <div class="col-xs-12">
-                    <img src="{{ data.photo_link }}" width=48 height=48 />  <strong>{{ data.name }}</strong> <small>@{{ data.handle }} - {{ data.join_date }}</small>
-                    <div>{{ tweet.text }}</div>
-                    <img src="{{ tweet.media }}" style="width:100%" />
-                  </div>
-                </div>
-              </div> <!--end of card-->
-              {% endfor %}
-            </div><!--End of tweets-->
-          </div>
-          {% endif %}
         </div>
+        <div id="content"></div>
       </div>
     </div>
   </body>
