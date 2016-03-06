@@ -4,13 +4,15 @@ from django.http import JsonResponse
 import json, os, pprint
 from application_only_auth import Client
 
+
+CONSUMER_KEY = os.environ["CONSUMER_KEY"]
+CONSUMER_SECRET = os.environ["CONSUMER_SECRET"]
+client = Client(CONSUMER_KEY, CONSUMER_SECRET)
+
 def index(request):
     return render(request, 'web/index.html', {})
 
-def twitter_data(request):
-    CONSUMER_KEY = os.environ["CONSUMER_KEY"]
-    CONSUMER_SECRET = os.environ["CONSUMER_SECRET"]
-    client = Client(CONSUMER_KEY, CONSUMER_SECRET)
+def get_user(request):
     user = client.request('https://api.twitter.com/1.1/users/show.json?screen_name=barackobama')
 
     # Delete later
@@ -19,7 +21,8 @@ def twitter_data(request):
 
     # Preprocess image to get larger resolution
     normal_index = user["profile_image_url"].find("normal.png")
-
+    profile_large = user["profile_image_url"][:normal_index]
+    print profile_large
     data = {
         "photo_link": user["profile_image_url_https"],
         "name": "Bob",
@@ -41,3 +44,12 @@ def twitter_data(request):
         ]
     }
     return JsonResponse({'hello': 'world'})
+
+def get_tweets(request):
+    pass
+
+def get_friends(request):
+    pass
+
+def get_users(request):
+    pass
