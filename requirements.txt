@@ -1,3 +1,4 @@
 Django==1.9.3
+django-redis==4.3.0
 twitter-application-only-auth==0.3.1
 wsgiref==0.1.2
