@@ -1,6 +1,7 @@
 from django.http import JsonResponse
+from django.core.cache import cache
 
-import json, os, pprint, redis
+import json, os, pprint
 from application_only_auth import Client
 
 
@@ -18,18 +19,19 @@ def get_user(request, screen_name):
         profile_original = user.get("profile_image_url")[:normal_index-1]+'.png'
 
     data = {
-        "photo_link": profile_original,
+        "profile_image_url": profile_original,
         "name": user.get("name"),
-        "handle": screen_name,
+        "screen_name": screen_name,
         "description": user.get("description"),
         "location": user.get("location"),
-        "external_link": user.get("entities").get("url").get("urls")[0].get("expanded_url"),
-        "join_date": user["created_at"],
-        "follower_count": user["friends_count"],
+        "url": user.get("entities").get("url").get("urls")[0].get("expanded_url"),
+        "created_at": user["created_at"],
+        "friends_count": user["friends_count"],
+        "statuses_count": user["statuses_count"]
     }
 
     # Need to add in user score before we send off but for that we need the tweets.. maybe just consolidate into one endpoint?
-
+    cache.set(screen_name, data, timeout=25)
     return JsonResponse(data)
 
 def get_tweets(request, screen_name):
@@ -59,3 +61,20 @@ def get_friends(screen_name):
 
 def get_users(user_ids):
     users = client.request('https://api.twitter.com/1.1/users/lookup.json?user_id='+user_ids)
+
+def test_cache(request):
+    screen_name = "barackobama"
+    data = {
+        "photo_link": "http/hi",
+        "name": "obama man",
+        "handle": "barackobama",
+        "description": "hi im obama",
+        "location": "washington dc",
+        "external_link": "obama.com",
+        "join_date": "feb 10,2013",
+        "follower_count": 100
+    }
+    cache.set(screen_name, data, timeout=None)
+    a = cache.get(screen_name)
+    print a
+    return JsonResponse(a)
