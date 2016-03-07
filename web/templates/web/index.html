@@ -1,31 +1,21 @@
 <!DOCTYPE html>
-<html ng-app>
+<html ng-app="tweetscore">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>tweetscore</title>
     <meta name="description" content="How do you rank on tweetscore?">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../../static/web/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/static/web/css/main.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../../static/web/js/angular.min.js"></script>
+    <script type="text/javascript" src="/static/web/lib/angular.min.js"></script>
+    <script type="text/javascript" src="/static/web/lib/angular-route.min.js"></script>
+    <script type="text/javascript" src="/static/web/app.js"></script>
+    <script type="text/javascript" src="/static/web/controllers/MainController.js"></script>
+    <script type="text/javascript" src="/static/web/services/TwitterAPIService.js"></script>
   </head>
   <body>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-xs-12">
-          <h1 style="color:#55acee">tweetscore</h1>
-          <hr />
-          <div class="input-group" id="input-handle">
-            <input type="text" class="form-control" placeholder="Look up twitter username...">
-            <span class="input-group-btn">
-              <button class="btn btn-default" type="button">Search</button>
-            </span>
-          </div>
-          <div style="height:15px;"></div>
-        </div>
-        <div id="content"></div>
-      </div>
-    </div>
+    <div ng-view></div>
   </body>
 </html>
