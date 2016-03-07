@@ -1,0 +1,58 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <h1 style="color:#55acee">tweetscore</h1>
+      <hr />
+      <div class="input-group" id="input-handle">
+        <input type="text" class="form-control" placeholder="Look up twitter username..." ng-model="screen_name">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button" ng-click="getUser()">Search</button>
+        </span>
+      </div>
+      <div style="height:15px;"></div>
+    </div>
+    <div class="row">
+      {% if data %}
+      <div class="col-xs-3" id="profile" style="margin-top:15px;">
+        <img src="{{ data.photo_link }}" style="width:100%" />
+        <h3>{{ data.name }}</h3>
+        <small>@{{ data.handle }}</small>
+        <p>{{ data.description }}</p>
+        <p>{{ data.location }}</p>
+        <a>{{ data.external_link }}</a>
+        <p>{{ data.join_date}}</p>
+      </div> <!--End of profile-->
+      <div class="col-xs-9" id="tweets">
+        <div id="tweetscore" style="margin-left:2px;">
+          <h3>Score: {{ data.tweetscore }}</h3><small> Based on</small>
+          <div class="row">
+            <div class="col-xs-4">Number of followers: {{ data.follower_count }}</div>
+            <div class="col-xs-4">Content of tweets: {{ data.tweet_content }}</div>
+            <div class="col-xs-4">Followers scores: {{ data.followers_score }}</div>
+          </div>
+        </div> <!-- End of tweetscore section-->
+        <div style="height:15px;"></div>
+        <div class="card-header">
+          <strong>Filters</strong>
+          <div class="row">
+            <div class="col-xs-4">Number of re-tweets</div>
+            <div class="col-xs-4">Dates</div>
+            <div class="col-xs-4">Photo?</div>
+          </div>
+        </div> <!-- end of card header -->
+        {% for tweet in data.tweets %}
+        <div class="card">
+          <div class="row">
+            <div class="col-xs-12">
+              <img src="{{ data.photo_link }}" width=48 height=48 />  <strong>{{ data.name }}</strong> <small>@{{ data.handle }} - {{ data.join_date }}</small>
+              <div>{{ tweet.text }}</div>
+              <img src="{{ tweet.media }}" style="width:100%" />
+            </div>
+          </div>
+        </div> <!--end of card-->
+        {% endfor %}
+      </div><!--End of tweets-->
+      {% endif %}
+    </div>
+  </div>
+</div>
