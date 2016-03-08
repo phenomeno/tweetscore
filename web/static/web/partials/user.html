@@ -6,15 +6,73 @@
       <div class="input-group" id="input-handle">
         <input type="text" class="form-control" placeholder="Look up twitter username..." ng-model="screen_name">
         <span class="input-group-btn">
-          <button class="btn btn-default" type="button" ng-click="getUser()">Search</button>
+          <button class="btn btn-default" type="button" ng-click="getTwitterData()">Search</button>
         </span>
       </div>
+      <div class="card-header">
+        <strong>Filters</strong>
+        <div class="row">
+          <form name="filterForm">
+            <div class="col-xs-4">
+              Number of retweets?
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="all_tweets" ng-model="all_tweets" checked> All retweet counts
+                </label>
+              </div>
+              <input type="text" class="form-control" name="retweet_count" ng-model="retweet_count" placeholder="{{ retweet_count }}" ng-pattern="retweetPattern" ng-disabled="all_tweets">
+            </div>
+            <div class="col-xs-4">
+              Dates?
+              <div class="row">
+                <div class="col-md-12">
+                  <p class="input-group">
+                    <input type="text" class="form-control" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="date_start" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                  </p>
+                </div>
+                <div class="col-md-12">
+                  <p class="input-group">
+                    <input type="text" class="form-control" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="date_end" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- End of datepicker-->
+            <div class="col-xs-4">
+              Photo?
+              <div class="radio">
+                <label>
+                  <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                  Show all tweets
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                  Show tweets with only photos
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
+                  Show tweets with no photos
+                </label>
+              </div>
+            </div><!-- End of photo toggle -->
+          </form>
+        </div>
+      </div> <!-- end of card header -->
       <div style="height:15px;"></div>
     </div>
     <div class="row">
-      {% if data %}
       <div class="col-xs-3" id="profile" style="margin-top:15px;">
-        <img src="{{ data.photo_link }}" style="width:100%" />
+        <img src="{{ user }}" style="width:100%" />
         <h3>{{ data.name }}</h3>
         <small>@{{ data.handle }}</small>
         <p>{{ data.description }}</p>
@@ -32,14 +90,7 @@
           </div>
         </div> <!-- End of tweetscore section-->
         <div style="height:15px;"></div>
-        <div class="card-header">
-          <strong>Filters</strong>
-          <div class="row">
-            <div class="col-xs-4">Number of re-tweets</div>
-            <div class="col-xs-4">Dates</div>
-            <div class="col-xs-4">Photo?</div>
-          </div>
-        </div> <!-- end of card header -->
+
         {% for tweet in data.tweets %}
         <div class="card">
           <div class="row">
@@ -52,7 +103,6 @@
         </div> <!--end of card-->
         {% endfor %}
       </div><!--End of tweets-->
-      {% endif %}
     </div>
   </div>
 </div>
