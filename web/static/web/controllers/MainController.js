@@ -4,11 +4,16 @@ angular.module("tweetscore").controller("MainController", function($scope, Twitt
     TwitterAPIService.getUserData(
       $scope.screen_name,
       $scope.check_count(),
+      $scope.picture_toggle,
+      $scope.date_start.getTime() / 1000,
+      $scope.date_end.getTime() / 1000,
       function(data){
-        $scope.user = data['user']
-        $scope.tweets = data['tweets']
-        console.log($scope.user);
-        console.log($scope.tweets);
+        if (data){
+          $scope.user = data['user'];
+          $scope.tweets = data['tweets'];
+          console.log($scope.tweets.length);
+          console.log($scope.tweets);
+        }
       });
   };
 
@@ -25,95 +30,32 @@ angular.module("tweetscore").controller("MainController", function($scope, Twitt
   };
 
   // Dates
-  $scope.today = function() {
-    return new Date();
-  };
-  $scope.date_end = $scope.today();
-
-  $scope.clear = function(dt) {
-    dt = null;
-  };
-
-  // $scope.inlineOptions = {
-  //   customClass: getDayClass,
-  //   minDate: new Date(),
-  //   showWeeks: true
-  // };
-
+  $scope.date_start = new Date(2016, 0, 1);
+  $scope.date_end = new Date();
   $scope.dateOptions = {
     formatYear: 'yy',
-    maxDate: new Date(2020, 5, 22),
-    minDate: new Date(),
+    maxDate: new Date(),
+    minDate: new Date(1970, 1, 1),
     startingDay: 1
   };
-
-  // Disable weekend selection
-  // function disabled(data) {
-  //   var date = data.date,
-  //     mode = data.mode;
-  //   return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
-  // }
-
-  // $scope.toggleMin = function() {
-  //   $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
-  //   $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
-  // };
-  //
-  // $scope.toggleMin();
-
   $scope.open1 = function() {
     $scope.popup1.opened = true;
   };
-
   $scope.open2 = function() {
     $scope.popup2.opened = true;
   };
-
-  $scope.setDate = function(year, month, day) {
-    $scope.dt = new Date(year, month, day);
-  };
-
-  $scope.altInputFormats = ['M!/d!/yyyy'];
-
   $scope.popup1 = {
     opened: false
   };
-
   $scope.popup2 = {
     opened: false
   };
 
-  var tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  var afterTomorrow = new Date();
-  afterTomorrow.setDate(tomorrow.getDate() + 1);
-  $scope.events = [
-    {
-      date: tomorrow,
-      status: 'full'
-    },
-    {
-      date: afterTomorrow,
-      status: 'partially'
-    }
-  ];
+  // Picture or no picture in tweet
+  $scope.picture_toggle = "all";
 
-  function getDayClass(data) {
-    var date = data.date,
-      mode = data.mode;
-    if (mode === 'day') {
-      var dayToCheck = new Date(date).setHours(0,0,0,0);
-
-      for (var i = 0; i < $scope.events.length; i++) {
-        var currentDay = new Date($scope.events[i].date).setHours(0,0,0,0);
-
-        if (dayToCheck === currentDay) {
-          return $scope.events[i].status;
-        }
-      }
-    }
-
-    return '';
-  }
-  // End poop
+  // Format twitter_score
+  $scope.formatScore = function(n) {
+    return Math.round(n);
+  };
 });
