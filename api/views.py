@@ -1,4 +1,4 @@
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.core.cache import cache
 
 import json, os, pprint, re, csv, calendar, time, datetime, email.utils
@@ -17,42 +17,46 @@ def twitter_data(request, screen_name):
     # Query strings for tweet filter
     picture_toggle = request.GET.get('picture_toggle')
     retweet_count = request.GET.get('retweet_count')
-    date_start = request.GET.get('date_start', 0)
-    date_end = request.GET.get('date_end', calendar.timegm(datetime.datetime.utcnow().utctimetuple()))
+    date_start = float(request.GET.get('date_start', 0))
+    date_end = float(request.GET.get('date_end', calendar.timegm(datetime.datetime.utcnow().utctimetuple())))
 
     # Check if user exists in cache
     user = cache.get(screen_name)
     tweets = cache.get(screen_name+':tweets')
 
     if user is None or tweets is None:
-        # tweets = client.request('https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name='+screen_name+'&count=200')
-        tweets = cache.get("temp_data")
+        tweets = client.request('https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name='+screen_name+'&count=200')
         twitter_score = get_twitter_score(screen_name, tweets)
         user = tweets[0].get("user")
         user["twitter_score"] = twitter_score
+        profile_image_url = user.get("profile_image_url")[:-11]+'.png'
+        user["profile_image_url"] = profile_image_url
         cache.set(screen_name, user, timeout=86400)
         cache.set(screen_name+':tweets', tweets, timeout=86400)
 
+    tweets_final = []
     # Filter tweets if need be
-    if picture_toggle == "on":
-        for tweet in tweets:
-            if not tweet.get("entities").get("media"):
-                tweets.remove(tweet)
+    for i, tweet in enumerate(tweets):
+        media = tweet.get("entities").get("media")
+        tweet_created_at = tweet.get("created_at")
+        if picture_toggle == "on" and media is None:
+            continue
+        if picture_toggle == "off" and media is not None:
+            continue
+        if retweet_count != "all":
+            try:
+                retweet_count = int(retweet_count)
+                if tweet.get("retweet_count") != retweet_count:
+                    continue
+            except:
+                return HttpResponseBadRequest("retweet_count must be 'all' or a number as a string type.")
+        if tweet_created_at:
+            created_at = float(calendar.timegm(email.utils.parsedate(tweet_created_at)))
+            if (created_at < date_start) or (created_at > date_end):
+                continue
+        tweets_final.append(tweet)
 
-    try:
-        retweet_count = int(retweet_count)
-        for tweet in tweets:
-            if tweet.get("retweet_count") != retweet_count:
-                tweets.remove(tweet)
-    except:
-        pass
-
-    for tweet in tweets:
-        created_at = calendar.timegm(email.utils.parsedate(tweet.get("created_at")))
-        if created_at < date_start or created_at > date_end:
-            tweets.remove(tweet)
-
-    return JsonResponse({'user': user, 'tweets': tweets})
+    return JsonResponse({'user': user, 'tweets': tweets_final})
 
 
 def get_followers(screen_name):
