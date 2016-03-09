@@ -13,6 +13,8 @@ temp_data = []
 negative_words = []
 positive_words = []
 
+
+
 def twitter_data(request, screen_name):
     # Query strings for tweet filter
     picture_toggle = request.GET.get('picture_toggle')
@@ -25,14 +27,23 @@ def twitter_data(request, screen_name):
     tweets = cache.get(screen_name+':tweets')
 
     if user is None or tweets is None:
-        tweets = client.request('https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name='+screen_name+'&count=200')
-        twitter_score = get_twitter_score(screen_name, tweets)
-        user = tweets[0].get("user")
-        user["twitter_score"] = twitter_score
-        profile_image_url = user.get("profile_image_url")[:-11]+'.png'
-        user["profile_image_url"] = profile_image_url
-        cache.set(screen_name, user, timeout=86400)
-        cache.set(screen_name+':tweets', tweets, timeout=86400)
+        try:
+            tweets = client.request('https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name='+screen_name+'&count=200')
+            twitter_score = get_twitter_score(screen_name, tweets)
+            if tweets:
+                user = tweets[0].get("user")
+            else:
+                user = client.request('https://api.twitter.com/1.1/users/show.json?screen_name='+screen_name)
+            user["twitter_score"] = twitter_score
+            profile_url = user.get("profile_image_url")
+            underscore_position = profile_url.rfind('_')
+            type_position = profile_url.rfind('.')
+            profile_image_url = profile_url[:underscore_position]+profile_url[type_position:]
+            user["profile_image_url"] = profile_image_url
+            cache.set(screen_name, user, timeout=86400)
+            cache.set(screen_name+':tweets', tweets, timeout=86400)
+        except:
+            return JsonResponse({'error': 'User name does not exist. Try: barackobama'})
 
     tweets_final = []
     # Filter tweets if need be
@@ -75,10 +86,13 @@ def get_users(user_ids):
 
 def get_twitter_score(screen_name, tweets):
     content_score = get_content_score(tweets)
-    followers_count = tweets[0].get("user").get("followers_count")
-    followers_average = get_average_follower_score(screen_name)
-    twitter_score = (followers_average + (followers_count * content_score)) / 2
-    return twitter_score
+    if tweets:
+        followers_count = tweets[0].get("user").get("followers_count")
+        followers_average = get_average_follower_score(screen_name)
+        twitter_score = (followers_average + (followers_count * content_score)) / 2
+        return twitter_score
+    else:
+        return 0
 
 
 def get_tweet_score(tweet):
@@ -114,7 +128,10 @@ def get_content_score(tweets):
         positive_total += score[0]
         negative_total += score[1]
         words_total += score[2]
-    content_score = ((positive_total - negative_total) / float(words_total)) + 1
+    if float(words_total) > 0:
+        content_score = ((positive_total - negative_total) / float(words_total)) + 1
+    else:
+        content_score = 0
     return content_score
 
 
