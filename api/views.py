@@ -77,7 +77,7 @@ def get_twitter_score(screen_name, tweets):
     content_score = get_content_score(tweets)
     followers_count = tweets[0].get("user").get("followers_count")
     followers_average = get_average_follower_score(screen_name)
-    twitter_score = ((followers_average + followers_count) / 2 ) * content_score
+    twitter_score = (followers_average + (followers_count * content_score)) / 2
     return twitter_score
 
 
@@ -114,7 +114,7 @@ def get_content_score(tweets):
         positive_total += score[0]
         negative_total += score[1]
         words_total += score[2]
-    content_score = ((positive_total - negative_total) / float(words_total) + 1 )/ 2
+    content_score = ((positive_total - negative_total) / float(words_total)) + 1
     return content_score
 
 
