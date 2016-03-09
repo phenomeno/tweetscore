@@ -4,7 +4,7 @@ Twitter reputation analyzer for Checkr. tweetscore allows you to view a user's l
 
 ## Stack
 
-Django 1.9.3 for the backend, Angular 1.5 and Bootstrap for the frontend. We also used redis 3.0.7 to cache users and user tweets to avoid exceeding twitter API's rate limits. Apache2 for the web server.
+Django 1.9.3 for the backend, Angular 1.5 and Bootstrap for the frontend. We also used redis 3.0.7 to cache users and user tweets to avoid exceeding twitter API's rate limits. Apache2 for the web server. Installation of redis is required to run the application properly.
 
 ## Scoring strategy
 
