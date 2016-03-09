@@ -25,8 +25,10 @@ SECRET_KEY = os.environ["SECRET_KEY_TWEETSCORE"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    '.gracehlee.com',
+    '.gracehlee.com.',
+]
 
 # Application definition
 
@@ -134,8 +136,3 @@ CACHES = {
         }
     }
 }
-
-ALLOWED_HOSTS = [
-    '.gracehlee.com',
-    '.gracehlee.com.'
-]
