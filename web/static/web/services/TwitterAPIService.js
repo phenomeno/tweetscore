@@ -15,8 +15,7 @@ angular.module('tweetscore').service('TwitterAPIService', function($http) {
       callback(data);
     }).
     error(function(error) {
-      console.error(error);
-      callback(null);
+      callback(error);
     });
   };
 });

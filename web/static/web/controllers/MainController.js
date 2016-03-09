@@ -17,7 +17,6 @@ angular.module("tweetscore").controller("MainController", function($scope, $http
   };
 
   $scope.isLoading = function() {
-    console.log($http.pendingRequests);
     return $http.pendingRequests.length !== 0;
   };
 
