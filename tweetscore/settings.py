@@ -136,5 +136,6 @@ CACHES = {
 }
 
 ALLOWED_HOSTS = [
-    'tweetscore.gracehlee.com',
+    '.gracehlee.com',
+    '.gracehlee.com.'
 ]
