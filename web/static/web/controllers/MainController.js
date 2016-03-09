@@ -1,4 +1,4 @@
-angular.module("tweetscore").controller("MainController", function($scope, TwitterAPIService){
+angular.module("tweetscore").controller("MainController", function($scope, $http, TwitterAPIService){
   $scope.screen_name = "";
   $scope.getTwitterData = function() {
     TwitterAPIService.getUserData(
@@ -11,10 +11,14 @@ angular.module("tweetscore").controller("MainController", function($scope, Twitt
         if (data){
           $scope.user = data['user'];
           $scope.tweets = data['tweets'];
-          console.log($scope.tweets.length);
-          console.log($scope.tweets);
+          $scope.noIdError = data['error'];
         }
       });
+  };
+
+  $scope.isLoading = function() {
+    console.log($http.pendingRequests);
+    return $http.pendingRequests.length !== 0;
   };
 
   // Retweet count
