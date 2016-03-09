@@ -1,4 +1,4 @@
 Django==1.9.3
 django-redis==4.3.0
-twitter-application-only-auth==0.3.1
+https://github.com/pabluk/twitter-application-only-auth/archive/master.zip
 wsgiref==0.1.2
