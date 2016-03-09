@@ -134,3 +134,7 @@ CACHES = {
         }
     }
 }
+
+ALLOWED_HOSTS = [
+    'tweetscore.gracehlee.com',
+]
